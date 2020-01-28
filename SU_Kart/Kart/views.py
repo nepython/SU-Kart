@@ -9,6 +9,7 @@ from django.contrib.auth.backends import ModelBackend
 
 def signup(request):
     User = None
+    request.session.flush()
     if request.method == 'POST':
         form = SignUpForm(data=request.POST)
         if form.is_valid():
@@ -19,26 +20,32 @@ def signup(request):
             User.correspondent = None
             User.order = None
             #User = form.cleaned_data.get('DOB')
-            User.save()
-            print(User)
-            user = authenticate(username=username, DOB=DOB)
-            login(request, user)
-            return redirect('Kart:product_list')
+            if(WebsiteUser.objects.get(name!=User.name)) :
+                User.save()
+                #print(User)
+                user = authenticate(username=username, DOB=DOB)
+                request.session['name'] = User.name
+                #login(request, user)
+                return redirect('Kart:product_list')
+            else:
+                return HttpResponse("Requested username already exists please enter a different name!")
+
         else:
             print(form.errors)
     else:
         form = SignUpForm()
-    #return render(request, 'Kart/home.html', {'form': form, 'user': User})
+    return render(request, 'Kart/home.html', {'form': form, 'user': User})
 
 
 def signin(request) :
     #user = None
+    request.session.flush()
     if request.method == 'POST':
         form = SignInForm(data=request.POST)
         if form.is_valid():
             name = request.POST.get('name')
             DOB = request.POST.get('DOB')
-            print(DOB)
+            #print(DOB)
             #user = authenticate(username=username, password=DOB)
             try:
                 user = WebsiteUser.objects.get(name=name)
@@ -71,22 +78,24 @@ def product_list(request) :
 def product_detail(request, title) :
     product = get_object_or_404(Product,
                                 title=title)
-    user = request.session["name"]
     new_complain = None
     complain_form = ComplainForm(data=request.POST)
-    if (WebsiteUser.objects.filter(name=user)).exists():
-        User = WebsiteUser.objects.get(name=user)
-
-        if request.method == 'POST':
-            # A complain was posted
-            complain_form = ComplainForm(data=request.POST)
-            if complain_form.is_valid():
-                # Create Comment object but don't save to database yet
-                new_complain = complain_form.save(commit=False)
-                User.complain = new_complain.complain
-                User.save()
-    else:
-        complain_form = ComplainForm()
+    try:
+        user = request.session["name"]
+        if (WebsiteUser.objects.filter(name=user)).exists():
+            User = WebsiteUser.objects.get(name=user)
+            if request.method == 'POST':
+                # A complain was posted
+                complain_form = ComplainForm(data=request.POST)
+                if complain_form.is_valid():
+                    # Create Comment object but don't save to database yet
+                    new_complain = complain_form.save(commit=False)
+                    User.complain = new_complain.complain
+                    User.save()
+            else:
+                complain_form = ComplainForm()
+    except KeyError:
+        return redirect('/signin')
     return render(request,
                   'Kart/product/detail.html',
                   {'product': product,
