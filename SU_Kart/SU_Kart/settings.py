@@ -26,7 +26,7 @@ SECRET_KEY = 'u9&m2c82ep8*^twp-!g1cm&bm=q4^9&8w5eb$2!yu#@g27ns)w'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['hardikjain.pythonanywhere.com']
 
 # Application definition
 
@@ -119,16 +119,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-#STATIC_ROOT = '' Used in Production
-STATICFILES_DIRS = [os.path.join(PROJECT_DIR, 'static'),
-                    os.path.join(PROJECT_DIR, 'static/js'),
-                    os.path.join(PROJECT_DIR, 'static/css'),
-                    os.path.join(PROJECT_DIR, 'images')]
-STATICFILES_FINDERS =(
+STATIC_ROOT = 'Kart/assets' #Used in Production
+STATICFILES_DIRS = [os.path.join(PROJECT_DIR, '/assets'),
+                    os.path.join(PROJECT_DIR, '/assets/js'),
+                    os.path.join(PROJECT_DIR, '/assets/css'),
+                    os.path.join(PROJECT_DIR, '/assets/images'),
+                    'var/www/static/',
+                    ]
+"""STATICFILES_FINDERS =(
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'django.contrib.staticfiles.finders.DefaultStorageFinder',
-)
+)"""
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(PROJECT_DIR, 'Kart/media')
