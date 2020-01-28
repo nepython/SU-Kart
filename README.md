@@ -1,7 +1,7 @@
 # SU_Kart
 <h2><b>It is shopping app built for shoppers and deliverery man. </b>
 The Kart has a simple structure</h2
-<p>
+<pre>
   -signup/signin<br>
   -search menu<br>
   -product list display<br>
@@ -10,4 +10,4 @@ The Kart has a simple structure</h2
     -remove<br>
     -complain<br>
   -track order status<br>
-</p>
+</pre>
