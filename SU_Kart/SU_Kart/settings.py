@@ -119,7 +119,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = 'Kart/assets' #Used in Production
+STATIC_ROOT = 'os.path.join(PROJECT_DIR, '/assets')' #Used in Production
 STATICFILES_DIRS = [os.path.join(PROJECT_DIR, '/assets'),
                     os.path.join(PROJECT_DIR, '/assets/js'),
                     os.path.join(PROJECT_DIR, '/assets/css'),
