@@ -9,5 +9,5 @@ The Kart has a simple structure</h2
     &emsp;-Order->Mail Confirmation<br>
     &emsp;-Remove->Mail Confirmation<br>
     &emsp;-Complain<br>
-  -track order status</strong>
+  -Track order status</strong>
 </h3>
