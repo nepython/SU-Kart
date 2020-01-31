@@ -132,6 +132,18 @@ STATICFILES_DIRS = [os.path.join(PROJECT_DIR, '/assets'),
     'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )"""
 
+#to send EMAILS
+SENDGRID_API_KEY=''
+EMAIL_HOST = 'api.sendgrid.com'
+EMAIL_HOST_USER ='apikey'
+EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = ''
+ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(PROJECT_DIR, 'Kart/media')
 
