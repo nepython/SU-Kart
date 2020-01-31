@@ -22,6 +22,14 @@ def signup(request):
             #User = form.cleaned_data.get('DOB')
             if(WebsiteUser.objects.get(name!=User.name)) :
                 User.save()
+                #new changed for email
+                subject = 'SU Kart: Successfully Registered'
+                from_email = settings.DEFAULT_FROM_EMAIL
+                to_email = [settings.DEFAULT_FROM_EMAIL]
+                to_user = [User.Email]
+                messsage = "Thanks for Registering in SU Kart. Your details submitted are:"
+                registration_message = "{0}, Username {1} with Email {2}. HAPPY SHOPPING".format(messsage, User.name, User.Email)
+                send_mail(subject, registration_message, from_email, to_user, fail_silently=False)
                 #print(User)
                 user = authenticate(username=username, DOB=DOB)
                 request.session['name'] = User.name
@@ -137,6 +145,14 @@ def cart_order(request, title):
         User.correspondent = correspondent.name
         User.order = product
         User.save()
+        #new changed for email
+        subject = 'SU Kart: Successfully Placed order:'
+        from_email = settings.DEFAULT_FROM_EMAIL
+        to_user = [User.Email]
+        messsage = "Thanks for ordering in SU Kart. Your order placed is:"
+        order_message = "{0}{1}, Delivery Boy: {2} with Email {3}. HAPPY SHOPPING".format(messsage, User.order, User.correspondent, correspondent.Email)
+        send_mail(subject, order_message, from_email, to_user, fail_silently=False)
+
         request.session["order"] = "Placed"
         #context = {} #Need to add this
         return render(request, 'Kart/product/detail.html',{'product': product}, )
@@ -148,8 +164,16 @@ def cart_remove(request, title):
     if(WebsiteUser.objects.filter(name=user)).exists():
         product = (get_object_or_404(Product, title=title))
         User = WebsiteUser.objects.get(name=user)
-        User.order = None
         correspondent = WebsiteUser.objects.get(name = User.correspondent)
+        #new changed for email
+        subject = 'SU Kart: Successfully removed order'
+        from_email = settings.DEFAULT_FROM_EMAIL
+        to_user = [User.Email]
+        messsage = "Thanks for shopping at SU Kart. Your order has been removed:"
+        remove_message = "{0}{1}. HAPPY SHOPPING".format(messsage, User.order)
+        send_mail(subject, remove_message, from_email, to_user, fail_silently=False)
+     
+        User.order = None
 
         #correspondent.complain-=1
         correspondent.order = None
