@@ -1,2 +1,4 @@
-.idea/* linguist-vendored
-static/* linguist-vendored
+linguist-language=Python
+linguist-language=JS
+linguist-language=CSS
+linguist-language=HTML
