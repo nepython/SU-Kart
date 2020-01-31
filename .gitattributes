@@ -1,4 +1,1 @@
-linguist-language=Python
-linguist-language=JS
-linguist-language=CSS
-linguist-language=HTML
+*.css linguist-language=Python
