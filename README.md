@@ -7,6 +7,7 @@ The Kart has a simple structure</h2
   -Product List display<br>
   -Product Details<br>
     &emsp;-Order->Mail Confirmation<br>
+                ->Paytm Gateway<br>
     &emsp;-Remove->Mail Confirmation<br>
     &emsp;-Complain<br>
   -Track order status</strong>
