@@ -11,7 +11,7 @@ app_name = 'Kart'
 
 urlpatterns = [
     path('signup/', views.signup, name='signup'),
-    path('signin/', views.signin, name='signin'),
+  # path('signin/', views.signin, name='signin'),
     path('product_list/', views.product_list, name='product_list'),
     path('<slug:title>/',
          views.product_detail,

@@ -18,5 +18,5 @@ class CompanyAdmin(admin.ModelAdmin):
 
 @admin.register(WebsiteUser)
 class WebsiteUser(admin.ModelAdmin):
-    list_display = ['Task','UID', 'name', 'Email', 'DOB', 'City', 'State', 'currency','order','complain','correspondent']
+    list_display = ['Task','UID', 'DOB', 'City', 'State', 'currency','order','complain','correspondent']
     list_editable = ['currency']

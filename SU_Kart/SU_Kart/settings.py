@@ -26,7 +26,8 @@ SECRET_KEY = ''
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['']
+ALLOWED_HOSTS = ['https://localhost:8000',
+                '*',]
 
 # Application definition
 
@@ -38,7 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Kart.apps.KartConfig',
-    'import_export'
+    'import_export',
+    #'users.apps.UsersConfig',
+    'payments.apps.PaymentsConfig',
+    'crispy_forms',
+    'storages'
 ]
 
 MIDDLEWARE = [
@@ -107,7 +112,7 @@ AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',]
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -119,18 +124,28 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(PROJECT_DIR, '/assets') #Used in Production
+STATIC_ROOT = os.path.join(PROJECT_DIR, '/static') #Used in Production
 STATICFILES_DIRS = [os.path.join(PROJECT_DIR, '/assets'),
                     os.path.join(PROJECT_DIR, '/assets/js'),
                     os.path.join(PROJECT_DIR, '/assets/css'),
                     os.path.join(PROJECT_DIR, '/assets/images'),
+                    os.path.join(BASE_DIR, 'staticfiles'),
+                    os.path.join(BASE_DIR, 'static'),
                     'var/www/static/',
                     ]
-"""STATICFILES_FINDERS =(
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'django.contrib.staticfiles.finders.DefaultStorageFinder',
-)"""
+
+
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = '/media/'
+
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# STATICFILES_FINDERS =(
+#     'django.contrib.staticfiles.finders.FileSystemFinder',
+#     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+#     'django.contrib.staticfiles.finders.DefaultStorageFinder',
+# )
 
 #to send EMAILS
 SENDGRID_API_KEY=''
@@ -149,3 +164,62 @@ MEDIA_ROOT = os.path.join(PROJECT_DIR, 'Kart/media')
 
 LOGIN_REDIRECT_URL ='/product_list'
 LOGOUT_REDIRECT_URL ='signin'
+
+# SESSION_COOKIE_SAMESITE = "Lax"
+# CSRF_COOKIE_SAMESITE = "Lax"
+# CSRF_COOKIE_DOMAIN = ".paytm.in"
+# CSRF_TRUSTED_ORIGINS = ".paytm.in"
+# CSRF_COOKIE_SECURE = False
+# SESSION_COOKIE_SECURE = False
+
+
+
+#PAYTM_MERCHANT_KEY = os.environ.get('PAYTM_MERCHANT_KEY')
+#PAYTM_MERCHANT_ID = os.environ.get('PAYTM_MERCHANT_ID')
+#HOST_URL = os.environ.get('HOST_URL')
+#PAYTM_WEBSITE = os.environ.get('PAYTM_WEBSITE')
+#PAYTM_CALLBACK_URL = "/payments/response/"
+#PAYTM_URL = os.environ.get('PAYTM_URL')
+
+PAYTM_MERCHANT_KEY = ""
+PAYTM_MERCHANT_ID = ""
+HOST_URL = "http://localhost:8080"
+PAYTM_CALLBACK_URL = "/payments/response/"
+PAYTM_URL = "https://securegw-stage.paytm.in/order/process"
+
+if DEBUG:
+
+    PAYTM_WEBSITE = 'WEBSTAGING'
+    HOST_URL = 'http://localhost:8000'
+    '''
+    In sandbox enviornment you can use following wallet credentials to login and make payment.
+    Mobile Number : 7777777777
+    Password : Paytm12345
+    This test wallet is topped-up to a balance of 7000 Rs. every 5 minutes.
+
+# if DEBUG:
+#     PAYTM_MERCHANT_KEY = os.environ.get('PAYTM_MERCHANT_KEY_TEST')
+#     PAYTM_MERCHANT_ID = os.environ.get('PAYTM_MERCHANT_ID_TEST')
+#     HOST_URL = os.environ.get('HOST_URL')
+#     PAYTM_WEBSITE = 'WEBSTAGING'
+#     '''
+#     In sandbox enviornment you can use following wallet credentials to login and make payment.
+#     Mobile Number : 7777777777
+#     Password : Paytm12345
+#     OTP: 489871
+#     This test wallet is topped-up to a balance of 7000 Rs. every 5 minutes.
+#     '''
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+ACCOUNT_LOGOUT_REDIRECT_URL = "/"
+#SECURE_SSL_REDIRECT = True
+
+
+CORS_REPLACE_HTTPS_REFERER      = False
+#HOST_SCHEME                     = "http://"
+SECURE_PROXY_SSL_HEADER         = None
+SECURE_SSL_REDIRECT             = False
+SESSION_COOKIE_SECURE           = False
+CSRF_COOKIE_SECURE              = False
+SECURE_HSTS_SECONDS             = None
+SECURE_HSTS_INCLUDE_SUBDOMAINS  = False
+SECURE_FRAME_DENY               = False

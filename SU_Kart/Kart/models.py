@@ -1,7 +1,9 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.urls import reverse
-
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class Company(models.Model):
     company = models.CharField(max_length=200,
@@ -41,39 +43,45 @@ class WebsiteUser(models.Model):
                            db_index=True)
     UID = models.CharField(max_length=50,
                            db_index=True)
-    name = models.TextField(max_length=200,
-                            db_index=True)
-    Email = models.EmailField(max_length=50,
-                              db_index=True)
-    DOB = models.DateField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE) #do it later using one-to-one-field
+    DOB = models.DateField(null=True)
     City = models.TextField(max_length=20,
                             db_index=True)
     State = models.TextField(max_length=40,
                              db_index=True)
-    currency = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    currency = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)], null=True, blank=True)
     order = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
     correspondent = models.CharField(max_length=10,blank=True, null=True)
     complain = models.CharField(max_length=200, blank=True, null=True)
 
-    """class Shopper(models.Model):
-        complain = models.TextField(max_length=500,
-                                    db_index=True)
-
-        class Meta:
-            ordering = ('order',)
-
-    class Delivery():
-        shopper = models.TextField(max_length=50,
-                                   db_index=True)
-
-        class Meta:
-            ordering = ('name',)"""
+    # class Shopper(models.Model):
+    #     complain = models.TextField(max_length=500,
+    #                                 db_index=True)
+    #
+    #     class Meta:
+    #         ordering = ('order',)
+    #
+    # class Delivery():
+    #     shopper = models.TextField(max_length=50,
+    #                                db_index=True)
+    #
+    #     class Meta:
+    #         ordering = ('name',)
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('user',)
 
     def get_absolute_url(self):
         return reverse('Kart:product_detail', args=self.UID)
 
     def __str__(self):
-        return self.name
+        return self.user.name
+
+    # @receiver(post_save, sender=User)
+    # def create_user_profile(sender, instance, created, **kwargs):
+    #     if created:
+    #         WebsiteUser.objects.create(user=instance)
+    #
+    # @receiver(post_save, sender=User)
+    # def save_user_profile(sender, instance, **kwargs):
+    #     instance.websiteuser.save()

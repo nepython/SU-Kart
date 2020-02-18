@@ -2,7 +2,7 @@
 
 
 {% load static %}
-
+{% load crispy_forms_tags %}
 
 <!--
 	Phantom by HTML5 UP
@@ -46,9 +46,9 @@
 					<nav id="menu">
 						<h2>Menu</h2>
 						<ul>
-							<li><a href="signup">Register</a></li>
-							<li><a href="product_list">Product List</a></li>
-							<li><a href="signup">Track Order Status</a></li>
+							<li><a href="/signup">Register</a></li>
+							<li><a href="/product_list">Product List</a></li>
+							<li><a href="/signup">Track Order Status</a></li>
 						</ul>
 					</nav>
 
@@ -60,7 +60,7 @@
 								Please Register yourselves</h1>
 							</header>
 				<!--Login-->
-					<h3>Already a member </h3><h2><a class="button primary" href="signin">SIGN IN</a></h2>
+					<h3>Already a member </h3><h2><a class="button primary" href="/signin">SIGN IN</a></h2>
 							
 				<!-- Footer -->
 					<footer id="footer">
@@ -68,7 +68,8 @@
 							<section>
 								<h2>Get in touch</h2>
 								<form method="post" action=".">
-									{{ form.as_p }}
+									{{ form|crispy }}
+                    				{{ additional_details|crispy }}
 									{% csrf_token %}
 									<ul class="actions">
 										<li><input type="Submit" value="Register" class="primary"/></li>

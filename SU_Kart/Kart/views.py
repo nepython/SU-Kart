@@ -1,81 +1,101 @@
+from django.core.mail import send_mail
+from django.db import transaction
 from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, WebsiteUser
 from django.contrib.auth import login, authenticate
-from .forms import SignUpForm, SignInForm, ComplainForm
+from .forms import SignUpForm, ComplainForm, UserRegisterForm
 from django.urls import reverse
 from django.contrib.auth.backends import ModelBackend
+from django.conf import settings
+from payments.models import Paytm_history
 
+
+@transaction.atomic  #Rollsback all commits to the database when an exxception occurs
 def signup(request):
     User = None
     request.session.flush()
     if request.method == 'POST':
-        form = SignUpForm(data=request.POST)
-        if form.is_valid():
+        form = UserRegisterForm(data=request.POST)
+        additional_details = SignUpForm(data=request.POST)
+        if form.is_valid() and additional_details.is_valid():
+            print(1)
             username = request.POST.get('name')
             DOB = request.POST.get('DOB')
             User = form.save(commit=False)
-            User.currency = 0
-            User.correspondent = None
-            User.order = None
+            User.save()
+            print(User.username)
+            user_details = additional_details.save(commit=False)
+            user_details.user = User
+            user_details.currency = 0
+            user_details.correspondent = None
+            user_details.order = None
+
+            #to be later done using one-to-one-field
+            # User.websiteUser.Task = additional_details.cleaned_data.get('Task')
+            # User.websiteUser.State = additional_details.cleaned_data.get('State')
+            # User.websiteUser.City = additional_details.cleaned_data.get('City')
+            # User.websiteUser.DOB = additional_details.cleaned_data.get('DOB')
+            # User.websiteUser.UID = additional_details.cleaned_data.get('UID')
             #User = form.cleaned_data.get('DOB')
-            if(WebsiteUser.objects.get(name!=User.name)) :
-                User.save()
+            #if(WebsiteUser.objects.get(name!=User.name)) :
+            user_details.save()
                 #new changed for email
-                subject = 'SU Kart: Successfully Registered'
-                from_email = settings.DEFAULT_FROM_EMAIL
-                to_email = [settings.DEFAULT_FROM_EMAIL]
-                to_user = [User.Email]
-                messsage = "Thanks for Registering in SU Kart. Your details submitted are:"
-                registration_message = "{0}, Username {1} with Email {2}. HAPPY SHOPPING".format(messsage, User.name, User.Email)
-                send_mail(subject, registration_message, from_email, to_user, fail_silently=False)
-                #print(User)
-                user = authenticate(username=username, DOB=DOB)
-                request.session['name'] = User.name
-                #login(request, user)
-                return redirect('Kart:product_list')
-            else:
-                return HttpResponse("Requested username already exists please enter a different name!")
+            subject = 'SU Kart: Successfully Registered'
+            from_email = settings.DEFAULT_FROM_EMAIL
+            to_email = [settings.DEFAULT_FROM_EMAIL]
+            to_user = [User.email]
+            messsage = "Thanks for Registering in SU Kart. Your details submitted are:"
+            registration_message = "{0}, Username {1} with Email {2}. HAPPY SHOPPING".format(messsage, User.username, User.email)
+    ########        send_mail(subject, registration_message, from_email, to_user, fail_silently=True)
+            #print(User)
+            user = authenticate(username=User.username, password=User.password)
+            #request.session['name'] = username
+            login(request, User)
+            return redirect('Kart:product_list')
+            #else:
+            #    return HttpResponse("Requested username already exists please enter a different name!")
 
         else:
             print(form.errors)
     else:
-        form = SignUpForm()
-    return render(request, 'Kart/home.html', {'form': form, 'user': User})
+        form = UserRegisterForm()
+        additional_details = SignUpForm()
+    return render(request, 'Kart/home.html', {'form': form,'additional_details': additional_details, 'user': User})
 
 
-def signin(request) :
-    #user = None
-    request.session.flush()
-    if request.method == 'POST':
-        form = SignInForm(data=request.POST)
-        if form.is_valid():
-            name = request.POST.get('name')
-            DOB = request.POST.get('DOB')
-            #print(DOB)
-            #user = authenticate(username=username, password=DOB)
-            try:
-                user = WebsiteUser.objects.get(name=name)
-                print(user.DOB, user.name)
-                if user.name == request.POST['name']:
-                    request.session['order'] = user.order
-                    request.session['name'] = user.name
-                    #return HttpResponse("You are logged in")
-                    #login(request, user,backend='django.contrib.auth.backends.ModelBackend')
-                    #request.session['user'] = user
-                    return redirect('Kart:product_list')
-                else:
-                    return HttpResponse("Name and DOB entered didn't match")
-            except WebsiteUser.DoesNotExist:
-                return HttpResponse("Username and DOB entered didn't match")
-
-
-        else:
-            print(form.errors)
-    else:
-        form = SignInForm()
-    return render(request, 'Kart/signin.html', {'form': form})
+# def signin(request) :
+#     #user = None
+#     request.session.flush()
+#     if request.method == 'POST':
+#         form = SignInForm(data=request.POST)
+#         if form.is_valid():
+#             name = request.POST.get('name')
+#             DOB = request.POST.get('DOB')
+#             #print(DOB)
+#             #user = authenticate(username=username, password=DOB)
+#             try:
+#                 user = WebsiteUser.objects.get(name=name)
+#                 print(user.DOB, user.name)
+#                 if user.name == request.POST['name']:
+#                     request.session['order'] = user.order
+#                     request.session['name'] = user.name
+#                     #return HttpResponse("You are logged in")
+#                     #login(request, user,backend='django.contrib.auth.backends.ModelBackend')
+#                     #request.session['user'] = user
+#                     return redirect('Kart:product_list')
+#                 else:
+#                     return HttpResponse("Name and DOB entered didn't match")
+#             except WebsiteUser.DoesNotExist:
+#                 return HttpResponse("Username and DOB entered didn't match")
+#
+#
+#         else:
+#             print(form.errors)
+#     else:
+#         form = SignInForm()
+#     return render(request, 'Kart/signin.html', {'form': form})
 
 
 def product_list(request) :
