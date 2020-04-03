@@ -1,14 +1,23 @@
-# SU_Kart
-<h2><b>It is shopping app built for shoppers and deliverery man. </b>
-The Kart has a simple structure</h2
-<h3><strong>
-  *Signup/Signin ->Mail Confirmation<br>
-  *Search menu<br>
-  *Product List display<br>
-  *Product Details<br>
-    &emsp;-Order->Mail Confirmation<br>
-    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;->Paytm Gateway<br>
-    &emsp;-Remove->Mail Confirmation<br>
-    &emsp;-Complain<br>
-  *Track order status</strong>
-</h3>
+# SU-Kart
+## Shopping app built for Shoppers and Deliverery man
+### The Web-app has a simple structure
+
+* **Registration**
+  * E-mail confirmation
+* **Signin**
+* **Search menu**
+* **Product List display**
+* **Product Details**
+* **Order**
+    * Paytm Payment Gateway
+    * E-mail Confirmation
+      - Track order status
+      - Complain
+  * Cancel order
+    - E-mail Confirmation
+* **Admin**
+  * Export data in csv format
+
+It is under-development, open for suggesstions on improvements, feel free to open an issue for the same :smile:
+
+**MADE WITH :sparkling_heart: BY @nepython**
